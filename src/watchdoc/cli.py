@@ -1,4 +1,5 @@
 import argparse
+import functools
 
 _cli_args = None
 
@@ -18,6 +19,7 @@ def cli_args():
 
 
 def verbose(func):
+    @functools.wraps(func)
     def wrapper(*args, **kwargs):
         if _cli_args.verbose:
             print("[verbose] ", func.__name__, args, kwargs)
