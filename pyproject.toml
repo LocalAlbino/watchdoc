@@ -3,4 +3,6 @@ name = "watchdoc"
 version = "0.1.0"
 description = "Automates creation of file headers for source code."
 requires-python = ">=3.14"
-dependencies = []
+dependencies = [
+    "watchdog>=6.0.0",
+]
