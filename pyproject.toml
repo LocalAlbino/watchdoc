@@ -1,5 +1,5 @@
 [project]
-name = "watchdoc"
+name = "watchdoc-cli"
 version = "0.1.0"
 description = "Automates creation of file headers for source code."
 requires-python = ">=3.14"
