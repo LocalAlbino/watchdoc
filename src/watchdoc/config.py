@@ -8,7 +8,7 @@ from watchdoc.cli import verbose
 def load_config():
     print("loading configuration file.")
     try:
-        with open("../../watchdoc.json", "r") as f:
+        with open("watchdoc.json", "r") as f:
             config = json.load(f)
             print("finished loading configuration file.")
             return config
