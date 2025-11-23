@@ -75,7 +75,13 @@ add the ones that you need for your project.
 
 ### Running
 
-After you've configured your `watchdoc.json` file, just run `watchdoc` in a terminal at the root of your project.
+After you've configured your `watchdoc.json` file, just run
+
+```
+watchdoc
+```
+
+in a terminal at the root of your project.
 It will detect when a file is created, and if it's part of your config, then the header will be created.
 
 ### Future plans
