@@ -25,6 +25,6 @@ class FileWatcher(FileSystemEventHandler):
             return
         extension = os.path.splitext(event.src_path)[1]
         if extension in self.config:
-            create_header_from_config(event.src_path, self.config[extension])
+            create_header_from_config(event.src_path, self.config[extension], 0)
         else:
             print(f"Skipping {event.src_path}, extension {extension} not configured.")
