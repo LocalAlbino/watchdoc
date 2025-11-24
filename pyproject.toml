@@ -1,7 +1,8 @@
 [project]
 name = "watchdoc-cli"
-version = "1.0.1"
+version = "1.0.2"
 description = "Automates creation of file headers for source code."
+readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
     "watchdog>=6.0.0",
