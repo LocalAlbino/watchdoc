@@ -47,7 +47,9 @@ def create_header_from_config(filename, config, tries):
                 for line in config["copyright"]:
                     updated = f"{config["comment"]} {replace_format_strings(line)}\n"
                     f.write(updated)
-                f.write(f"{config["comment"]}\n")
+
+                if "fields" in config and isinstance(config["fields"], dict):
+                    f.write(f"{config["comment"]}\n")  # Extra line between copyright and fields
 
             if "fields" in config and isinstance(config["fields"], dict):
                 for key, value in config["fields"].items():
