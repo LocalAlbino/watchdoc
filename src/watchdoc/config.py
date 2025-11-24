@@ -16,3 +16,10 @@ def load_config():
         print("Configuration file not found.")
         print("See https://github.com/LocalAlbino/watchdoc for info on how to set up watchdoc.")
         sys.exit(1)
+    except json.decoder.JSONDecodeError as e:
+        print("Failed to parse watchdoc.json.")
+        print(f"JSON Error: {e}")
+        sys.exit(1)
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        sys.exit(1)

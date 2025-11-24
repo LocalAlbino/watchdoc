@@ -1,6 +1,6 @@
 [project]
 name = "watchdoc-cli"
-version = "0.1.0"
+version = "1.0.1"
 description = "Automates creation of file headers for source code."
 requires-python = ">=3.14"
 dependencies = [
