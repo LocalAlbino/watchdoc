@@ -30,11 +30,12 @@ internal/config.go    → Config and Extension structs (JSON-serializable)
 
 ```go
 type Config struct {
-    Author       string
-    Copyright    string
-    CreatedAt    bool
-    ExcludedDirs []string
-    Extensions   map[string]Extension  // keyed by file extension (e.g. "go", "py")
+    Author      string
+    Copyright   string
+    CreatedAt   bool
+    FileName    bool
+    ExcludeDirs []string
+    Extensions  map[string]Extension  // keyed by file extension (e.g. "go", "py")
 }
 
 type Extension struct {
