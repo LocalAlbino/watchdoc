@@ -5,3 +5,6 @@ build:
 
 fmt:
 	go fmt
+
+clean:
+	rm ./watchdoc.json

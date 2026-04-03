@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/localalbino/watchdoc/internal"
 	"github.com/spf13/cobra"
@@ -34,6 +35,8 @@ This config will be used for both the 'scan' and 'watch' commands.`,
 				"target", ".gradle",
 				// .NET / C#
 				"obj", ".vs",
+				// IDEs
+				".idea", ".vscode", ".eclipse",
 			},
 			Extensions: map[string]internal.Extension{
 				// JavaScript / TypeScript
@@ -62,16 +65,16 @@ This config will be used for both the 'scan' and 'watch' commands.`,
 			},
 		}
 
-		path, err := cmd.Flags().GetString("root")
+		root, err := cmd.Flags().GetString("root")
 		if err != nil {
 			log.Fatalln("Unable to create configuration file")
 		}
 
-		if path[len(path)-1] == '/' {
-			path += "watchdoc.json"
-		} else {
-			path += "/watchdoc.json"
+		if _, err := os.Stat(root); os.IsNotExist(err) {
+			log.Fatalln("Directory does not exist: " + root)
 		}
+
+		path := filepath.Join(root, "watchdoc.json")
 
 		if _, err := os.Stat(path); err == nil {
 			fmt.Println("Configuration file already exists at " + path)
