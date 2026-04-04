@@ -82,18 +82,12 @@ This config will be used for both the 'scan' and 'watch' commands.`,
 			return
 		}
 
-		file, err := os.Create(path)
-		if err != nil {
-			log.Fatalln("Unable to create configuration file at " + path)
-		}
-
 		configBytes, err := json.MarshalIndent(config, "", "  ")
 		if err != nil {
 			log.Fatalln("Unable to create configuration file at " + path)
 		}
 
-		_, err = file.Write(configBytes)
-		if err != nil {
+		if err = os.WriteFile(path, configBytes, 0o644); err != nil {
 			log.Fatalln("Failed to write to configuration file at " + path)
 		}
 

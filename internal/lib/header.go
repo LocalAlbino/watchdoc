@@ -52,6 +52,10 @@ func WriteHeader(config *Config, path string) {
 		}
 	}
 
+	if strings.HasPrefix(string(existingContents), "#!") {
+		return
+	}
+
 	if strings.HasPrefix(string(existingContents), header.String()) {
 		return
 	}
