@@ -12,7 +12,7 @@ Watchdoc is a Go CLI tool that automates adding file headers (author, copyright,
 make          # fmt + build (default)
 make build    # compiles to ./bin/watchdoc.exe
 make fmt      # runs go fmt
-go test ./... # run all tests
+make test     # run all tests
 ```
 
 ## Architecture
