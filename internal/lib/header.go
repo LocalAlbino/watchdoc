@@ -1,3 +1,6 @@
+// Copyright (c) 2026 Rudy Hartwig.
+// Licensed under the MIT License.
+
 package lib
 
 import (

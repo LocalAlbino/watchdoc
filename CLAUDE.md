@@ -49,6 +49,8 @@ type Extension struct {
 
 The `init` command writes a `watchdoc.json` into `--root` (default: `.`) with sensible defaults for common languages and excluded dirs (`.git`, `bin`, `node_modules`, etc.).
 
+`watchdoc.json` should be gitignored if it contains personal details (author name, etc.) that differ per contributor — teams can commit a `watchdoc.example.json` as a reference instead. Configs using only `copyright_only: true` with a shared copyright line can safely be committed.
+
 ## Key behaviors to be aware of
 
 - `WriteHeader` skips files starting with `#!` (shebangs must stay at line 1)

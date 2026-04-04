@@ -29,6 +29,14 @@ watchdoc init
 
 This creates a `watchdoc.json` with sensible defaults for common languages and a standard set of excluded directories. Open it and fill in your `author` and `copyright` fields.
 
+If your config contains personal details like `author`, it should be gitignored and filled in by each contributor individually. Teams that want a shared starting point can commit a `watchdoc.example.json` as a reference.
+
+```bash
+echo "watchdoc.json" >> .gitignore
+```
+
+If you only use `copyright_only: true` with a shared copyright line, committing `watchdoc.json` directly is perfectly reasonable.
+
 To initialize in a different directory:
 
 ```bash

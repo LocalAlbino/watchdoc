@@ -1,3 +1,6 @@
+// Copyright (c) 2026 Rudy Hartwig.
+// Licensed under the MIT License.
+
 package cmd
 
 import (
@@ -81,9 +84,9 @@ func TestScanIgnoresHeaderedFiles(t *testing.T) {
 func TestScanSkipsExcludedDirs(t *testing.T) {
 	dir := t.TempDir()
 	buildTree(t, dir, map[string]string{
-		"main.go":              "package main\n",     // missing — should be counted
-		"vendor/dep.go":        "package dep\n",      // excluded — should not be counted
-		"node_modules/lib.js":  "export default {}\n", // excluded — should not be counted
+		"main.go":             "package main\n",      // missing — should be counted
+		"vendor/dep.go":       "package dep\n",       // excluded — should not be counted
+		"node_modules/lib.js": "export default {}\n", // excluded — should not be counted
 	})
 
 	missing, _ := scanDir(&scanConfig, dir, false)
