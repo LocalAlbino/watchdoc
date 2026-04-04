@@ -8,3 +8,6 @@ fmt:
 
 clean:
 	rm ./watchdoc.json
+
+test:
+	go test ./cmd/... -v
