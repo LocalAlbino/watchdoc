@@ -7,7 +7,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/localalbino/watchdoc/internal"
+	"github.com/localalbino/watchdoc/internal/lib"
 	"github.com/spf13/cobra"
 )
 
@@ -17,11 +17,12 @@ var initCmd = &cobra.Command{
 	Long: `Initializes a new watchdoc configuration for the current directory.
 This config will be used for both the 'scan' and 'watch' commands.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config := internal.Config{
-			Author:    "_",
-			Copyright: "_",
-			CreatedAt: false,
-			FileName:  false,
+		config := lib.Config{
+			Author:        "_",
+			Copyright:     "_",
+			CopyrightOnly: false,
+			CreatedAt:     false,
+			FileName:      false,
 			ExcludeDirs: []string{
 				// General
 				".git", "bin", "dist", "out", "build", "vendor", "tmp", "log", "logs", "coverage",
@@ -38,7 +39,7 @@ This config will be used for both the 'scan' and 'watch' commands.`,
 				// IDEs
 				".idea", ".vscode", ".eclipse",
 			},
-			Extensions: map[string]internal.Extension{
+			Extensions: map[string]lib.Extension{
 				// JavaScript / TypeScript
 				"js":  {CommentSyntax: "//"},
 				"ts":  {CommentSyntax: "//"},
