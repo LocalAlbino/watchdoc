@@ -1,3 +1,6 @@
+// Copyright (c) 2026 Rudy Hartwig.
+// Licensed under the MIT License.
+
 package cmd
 
 import (
@@ -5,8 +8,9 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 
-	"github.com/localalbino/watchdoc/internal"
+	"github.com/localalbino/watchdoc/internal/lib"
 	"github.com/spf13/cobra"
 )
 
@@ -16,11 +20,12 @@ var initCmd = &cobra.Command{
 	Long: `Initializes a new watchdoc configuration for the current directory.
 This config will be used for both the 'scan' and 'watch' commands.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config := internal.Config{
-			Author:    "_",
-			Copyright: "_",
-			CreatedAt: false,
-			FileName:  false,
+		config := lib.Config{
+			Author:        "_",
+			Copyright:     "_",
+			CopyrightOnly: false,
+			CreatedAt:     false,
+			FileName:      false,
 			ExcludeDirs: []string{
 				// General
 				".git", "bin", "dist", "out", "build", "vendor", "tmp", "log", "logs", "coverage",
@@ -34,8 +39,10 @@ This config will be used for both the 'scan' and 'watch' commands.`,
 				"target", ".gradle",
 				// .NET / C#
 				"obj", ".vs",
+				// IDEs
+				".idea", ".vscode", ".eclipse",
 			},
-			Extensions: map[string]internal.Extension{
+			Extensions: map[string]lib.Extension{
 				// JavaScript / TypeScript
 				"js":  {CommentSyntax: "//"},
 				"ts":  {CommentSyntax: "//"},
@@ -62,25 +69,20 @@ This config will be used for both the 'scan' and 'watch' commands.`,
 			},
 		}
 
-		path, err := cmd.Flags().GetString("root")
+		root, err := cmd.Flags().GetString("root")
 		if err != nil {
 			log.Fatalln("Unable to create configuration file")
 		}
 
-		if path[len(path)-1] == '/' {
-			path += "watchdoc.json"
-		} else {
-			path += "/watchdoc.json"
+		if _, err := os.Stat(root); os.IsNotExist(err) {
+			log.Fatalln("Directory does not exist: " + root)
 		}
+
+		path := filepath.Join(root, "watchdoc.json")
 
 		if _, err := os.Stat(path); err == nil {
 			fmt.Println("Configuration file already exists at " + path)
 			return
-		}
-
-		file, err := os.Create(path)
-		if err != nil {
-			log.Fatalln("Unable to create configuration file at " + path)
 		}
 
 		configBytes, err := json.MarshalIndent(config, "", "  ")
@@ -88,8 +90,7 @@ This config will be used for both the 'scan' and 'watch' commands.`,
 			log.Fatalln("Unable to create configuration file at " + path)
 		}
 
-		_, err = file.Write(configBytes)
-		if err != nil {
+		if err = os.WriteFile(path, configBytes, 0o644); err != nil {
 			log.Fatalln("Failed to write to configuration file at " + path)
 		}
 

@@ -1,0 +1,13 @@
+{
+  "author": "",
+  "copyright": "Copyright (c) 2026 Rudy Hartwig.\nLicensed under the MIT License.",
+  "copyright_only": true,
+  "created_at": false,
+  "file_name": false,
+  "exclude_dirs": [".git", "bin"],
+  "extensions": {
+    "go": {
+      "comment_syntax": "//"
+    }
+  }
+}

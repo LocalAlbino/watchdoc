@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Watchdoc is a Go CLI tool that automates adding file headers (author, copyright, etc.) across codebases. It scans for files missing headers and inserts them based on a `watchdoc.json` config file. A `watch` mode is planned to add headers to new files automatically.
+Watchdoc is a Go CLI tool that automates adding file headers (author, copyright, etc.) across codebases. It watches for new files and inserts headers immediately based on a `watchdoc.json` config file. Designed as a convention-over-config tool that works independently of any editor or IDE.
 
 ## Build Commands
 
@@ -12,7 +12,7 @@ Watchdoc is a Go CLI tool that automates adding file headers (author, copyright,
 make          # fmt + build (default)
 make build    # compiles to ./bin/watchdoc.exe
 make fmt      # runs go fmt
-go test ./... # run all tests
+make test     # run all tests
 ```
 
 ## Architecture
@@ -20,22 +20,26 @@ go test ./... # run all tests
 The project uses [Cobra](https://github.com/spf13/cobra) for CLI structure.
 
 ```
-main.go               → calls cmd.Execute()
-cmd/root.go           → defines root "watchdoc" command
-cmd/init.go           → "init" subcommand: creates watchdoc.json with defaults
-internal/config.go    → Config and Extension structs (JSON-serializable)
+main.go                  → calls cmd.Execute()
+cmd/root.go              → defines root "watchdoc" command
+cmd/init.go              → "init" subcommand: creates watchdoc.json with defaults
+cmd/watch.go             → "watch" subcommand: watches for new files and writes headers
+cmd/scan.go              → "scan" subcommand: walks the project, reports files missing headers, optional --fix
+internal/lib/config.go   → Config and Extension structs (JSON-serializable)
+internal/lib/header.go   → header building and writing logic
 ```
 
-### Config structure (`internal/config.go`)
+### Config structure (`internal/lib/config.go`)
 
 ```go
 type Config struct {
-    Author      string
-    Copyright   string
-    CreatedAt   bool
-    FileName    bool
-    ExcludeDirs []string
-    Extensions  map[string]Extension  // keyed by file extension (e.g. "go", "py")
+    Author        string
+    Copyright     string
+    CopyrightOnly bool
+    CreatedAt     bool
+    FileName      bool
+    ExcludeDirs   []string
+    Extensions    map[string]Extension  // keyed by file extension (e.g. "go", "py")
 }
 
 type Extension struct {
@@ -44,3 +48,14 @@ type Extension struct {
 ```
 
 The `init` command writes a `watchdoc.json` into `--root` (default: `.`) with sensible defaults for common languages and excluded dirs (`.git`, `bin`, `node_modules`, etc.).
+
+`watchdoc.json` should be gitignored if it contains personal details (author name, etc.) that differ per contributor — teams can commit a `watchdoc.example.json` as a reference instead. Configs using only `copyright_only: true` with a shared copyright line can safely be committed.
+
+## Key behaviors to be aware of
+
+- `WriteHeader` skips files starting with `#!` (shebangs must stay at line 1)
+- `WriteHeader` is idempotent — the existence check uses only copyright and fileName (stable fields); author is written last and excluded from the check so headers from other contributors are not overwritten, and `Created: unknown` from scan --fix is also tolerated
+- `watch` only triggers on `fsnotify.Create` events, not writes, so saving an existing file never re-adds a header
+- New directories created while watching are automatically added to the watcher, unless they match an `exclude_dirs` entry
+- `scan` exits non-zero if any files are missing headers or have temp headers, making it suitable for CI
+- `scan --fix` writes a best-effort header with `Created: unknown` and embeds `ScanAutoGenMarker` so subsequent scans can identify it as a temp header needing human review
